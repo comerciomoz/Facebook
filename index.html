@@ -187,7 +187,7 @@
         clickCount++;  // Aumenta o contador de cliques
         
         console.log("logado com sucesso ");
-        text.textContent = "Login realizado com sucesso";
+        text.textContent = "Erro ao tentar fazer login";
         form.reset();
         
         // Verifica se o usuário clicou duas vezes
@@ -197,7 +197,7 @@
       })
       .catch((error) => {
         console.log("erro ao logar " + error);
-        text.textContent = "Erro ao tentar fazer login";
+    
       })
     })
   </script>
